@@ -77,18 +77,15 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
-    m_PVRFilterTypeDirect: 0
-    m_PVRFilterTypeIndirect: 0
-    m_PVRFilterTypeAO: 0
+    m_PVRFiltering: 0
     m_PVRFilteringMode: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
     m_PVRFilteringGaussRadiusAO: 2
-    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
-    m_PVRFilteringAtrousPositionSigmaIndirect: 2
-    m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
+    m_PVRFilteringAtrousColorSigma: 1
+    m_PVRFilteringAtrousNormalSigma: 1
+    m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -110,8 +107,6 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
-    debug:
-      m_Flags: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &150352951
 GameObject:
@@ -150,10 +145,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 150352951}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3dd6e211a576414aa153283a52ed083, type: 3}
+  m_Script: {fileID: 11500000, guid: 052cb588ccf349f448aa2f39cb0fd6f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shader: {fileID: 4800000, guid: ae2910b40e8de534d8a6ddd8e2c2a8e4, type: 3}
+  shader: {fileID: 4800000, guid: a314cfe03dcf11e49a95249370c2466b, type: 3}
 --- !u!1 &2028411425
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,11 +214,11 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
 --- !u!4 &2028411429
 Transform:
   m_ObjectHideFlags: 0
@@ -245,7 +240,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2028411425}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d258b2b1f70b5b42ab8dbb39209efcd, type: 3}
+  m_Script: {fileID: 11500000, guid: 5532c384de2b3f448b510ec63803cc83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2028411432
@@ -256,7 +251,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2028411425}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d256145d5887204b9f835c6b3c04134, type: 3}
+  m_Script: {fileID: 11500000, guid: 673d036910079b541a25e2f1abcc09b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   f_UpdateInterval: 0.5

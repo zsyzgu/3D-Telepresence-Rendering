@@ -3,6 +3,5 @@
 /Release
 /UnityPackageManager
 /.vs
-*.meta
 *.csproj
 *.sln
