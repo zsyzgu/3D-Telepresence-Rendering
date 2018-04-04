@@ -10,22 +10,22 @@ public class CallPCL : MonoBehaviour
 {
     const int POINT_BYTES = 16;
 
-    [DllImport("pc-recog", EntryPoint = "callStart")]
+    [DllImport("3D-Telepresence", EntryPoint = "callStart")]
     public static extern void callStart();
 
-    [DllImport("pc-recog", EntryPoint = "callUpdate")]
+    [DllImport("3D-Telepresence", EntryPoint = "callUpdate")]
     public static extern IntPtr callUpdate();
 
-    [DllImport("pc-recog", EntryPoint = "callRegistration")]
+    [DllImport("3D-Telepresence", EntryPoint = "callRegistration")]
     public static extern void callRegistration();
 
-    [DllImport("pc-recog", EntryPoint = "callSetBackground")]
+    [DllImport("3D-Telepresence", EntryPoint = "callSetBackground")]
     public static extern void callSetBackground();
 
-    [DllImport("pc-recog", EntryPoint = "callSaveScene")]
+    [DllImport("3D-Telepresence", EntryPoint = "callSaveScene")]
     public static extern void callSaveScene();
 
-    [DllImport("pc-recog", EntryPoint = "callStop")]
+    [DllImport("3D-Telepresence", EntryPoint = "callStop")]
     public static extern void callStop();
 
     public static void getMesh(ref List<MeshInfos> meshList, int vMax)
