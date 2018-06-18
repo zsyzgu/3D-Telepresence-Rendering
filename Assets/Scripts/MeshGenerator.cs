@@ -26,14 +26,6 @@ public class MeshGenerator : MonoBehaviour
         {
             CallPCL.callRegistration();
         }
-        if (Input.GetKey(KeyCode.B))
-        {
-            CallPCL.callSetBackground();
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            CallPCL.callSaveScene();
-        }
     }
 
     void OnDestroy()

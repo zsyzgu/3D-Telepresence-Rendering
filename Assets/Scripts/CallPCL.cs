@@ -19,12 +19,6 @@ public class CallPCL : MonoBehaviour
     [DllImport("3D-Telepresence", EntryPoint = "callRegistration")]
     public static extern void callRegistration();
 
-    [DllImport("3D-Telepresence", EntryPoint = "callSetBackground")]
-    public static extern void callSetBackground();
-
-    [DllImport("3D-Telepresence", EntryPoint = "callSaveScene")]
-    public static extern void callSaveScene();
-
     [DllImport("3D-Telepresence", EntryPoint = "callStop")]
     public static extern void callStop();
 
