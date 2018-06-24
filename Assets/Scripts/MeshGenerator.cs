@@ -76,22 +76,26 @@ public class MeshGenerator : MonoBehaviour
             if (mesh.GetIndices(0) != null && mesh.GetIndices(0).Length != count)
             {
                 int[] indices = new int[count];
-                int[] tris = new int[count];
-                Parallel.For(0, count, j => {
-                    indices[j] = j;
-                    int res = j % 3;
-                    if (res == 0)
-                    {
-                        tris[j] = j;
-                    }
-                    else if (res == 1)
-                    {
-                        tris[j] = j + 1;
-                    }
-                    else
-                    {
-                        tris[j] = j - 1;
-                    }
+                int[] tris = new int[count * 2];
+                Parallel.For(0, count / 6, j => {
+                    indices[6 * j + 0] = 6 * j + 0;
+                    indices[6 * j + 1] = 6 * j + 1;
+                    indices[6 * j + 2] = 6 * j + 2;
+                    indices[6 * j + 3] = 6 * j + 3;
+                    indices[6 * j + 4] = 6 * j + 4;
+                    indices[6 * j + 5] = 6 * j + 5;
+                    tris[12 * j + 0] = 6 * j + 0;
+                    tris[12 * j + 1] = 6 * j + 5;
+                    tris[12 * j + 2] = 6 * j + 3;
+                    tris[12 * j + 3] = 6 * j + 3;
+                    tris[12 * j + 4] = 6 * j + 4;
+                    tris[12 * j + 5] = 6 * j + 1;
+                    tris[12 * j + 6] = 6 * j + 5;
+                    tris[12 * j + 7] = 6 * j + 2;
+                    tris[12 * j + 8] = 6 * j + 4;
+                    tris[12 * j + 9] = 6 * j + 3;
+                    tris[12 * j + 10] = 6 * j + 5;
+                    tris[12 * j + 11] = 6 * j + 4;
                 });
                 mesh.SetIndices(indices, MeshTopology.Points, 0);
                 mesh.SetTriangles(tris, 0);
