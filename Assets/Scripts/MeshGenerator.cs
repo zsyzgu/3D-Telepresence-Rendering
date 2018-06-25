@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 public class MeshGenerator : MonoBehaviour
 {
@@ -10,17 +11,41 @@ public class MeshGenerator : MonoBehaviour
     public Shader shader;
 
     private List<MeshInfos> meshList = new List<MeshInfos>();
-    private const int verticesMax = 65502;
+    private const int VERTICES_MAX = 65502;
     private Mesh[] meshArray = null;
+
+    private int[] indicesMax = new int[VERTICES_MAX];
+    private int[] trisMax = new int[VERTICES_MAX * 2];
 
     void Start()
     {
         CallPCL.callStart();
+
+        Parallel.For(0, VERTICES_MAX / 6, j => {
+            indicesMax[6 * j + 0] = 6 * j + 0;
+            indicesMax[6 * j + 1] = 6 * j + 1;
+            indicesMax[6 * j + 2] = 6 * j + 2;
+            indicesMax[6 * j + 3] = 6 * j + 3;
+            indicesMax[6 * j + 4] = 6 * j + 4;
+            indicesMax[6 * j + 5] = 6 * j + 5;
+            trisMax[12 * j + 0] = 6 * j + 0;
+            trisMax[12 * j + 1] = 6 * j + 5;
+            trisMax[12 * j + 2] = 6 * j + 3;
+            trisMax[12 * j + 3] = 6 * j + 3;
+            trisMax[12 * j + 4] = 6 * j + 4;
+            trisMax[12 * j + 5] = 6 * j + 1;
+            trisMax[12 * j + 6] = 6 * j + 5;
+            trisMax[12 * j + 7] = 6 * j + 2;
+            trisMax[12 * j + 8] = 6 * j + 4;
+            trisMax[12 * j + 9] = 6 * j + 3;
+            trisMax[12 * j + 10] = 6 * j + 5;
+            trisMax[12 * j + 11] = 6 * j + 4;
+        });
     }
 
     void Update()
     {
-        CallPCL.getMesh(ref meshList, verticesMax);
+        CallPCL.getMesh(ref meshList, VERTICES_MAX);
         Generate();
         if (Input.GetKey(KeyCode.R))
         {
@@ -50,11 +75,6 @@ public class MeshGenerator : MonoBehaviour
             meshArray = new Mesh[meshList.Count];
         }
 
-        //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        //stopwatch.Start();
-        //stopwatch.Stop();
-        //Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
-
         for (int i = 0; i < meshList.Count; i++)
         {
             MeshInfos meshInfo = meshList[i];
@@ -65,40 +85,27 @@ public class MeshGenerator : MonoBehaviour
                 meshArray[i] = new Mesh();
             }
             Mesh mesh = meshArray[i];
-            if (mesh.vertexCount != meshInfo.vertices.Length)
-            {
-                mesh.Clear();
-            }
-            mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 16f);
-            mesh.vertices = meshInfo.vertices;
-            mesh.colors = meshInfo.colors;
 
-            if (mesh.GetIndices(0) != null && mesh.GetIndices(0).Length != count)
-            {
-                int[] indices = new int[count];
-                int[] tris = new int[count * 2];
-                Parallel.For(0, count / 6, j => {
-                    indices[6 * j + 0] = 6 * j + 0;
-                    indices[6 * j + 1] = 6 * j + 1;
-                    indices[6 * j + 2] = 6 * j + 2;
-                    indices[6 * j + 3] = 6 * j + 3;
-                    indices[6 * j + 4] = 6 * j + 4;
-                    indices[6 * j + 5] = 6 * j + 5;
-                    tris[12 * j + 0] = 6 * j + 0;
-                    tris[12 * j + 1] = 6 * j + 5;
-                    tris[12 * j + 2] = 6 * j + 3;
-                    tris[12 * j + 3] = 6 * j + 3;
-                    tris[12 * j + 4] = 6 * j + 4;
-                    tris[12 * j + 5] = 6 * j + 1;
-                    tris[12 * j + 6] = 6 * j + 5;
-                    tris[12 * j + 7] = 6 * j + 2;
-                    tris[12 * j + 8] = 6 * j + 4;
-                    tris[12 * j + 9] = 6 * j + 3;
-                    tris[12 * j + 10] = 6 * j + 5;
-                    tris[12 * j + 11] = 6 * j + 4;
-                });
-                mesh.SetIndices(indices, MeshTopology.Points, 0);
-                mesh.SetTriangles(tris, 0);
+            if (mesh.vertexCount != meshInfo.vertices.Length) {
+                mesh.Clear();
+                mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 16f);
+                mesh.vertices = meshInfo.vertices;
+                mesh.colors = meshInfo.colors;
+                if (mesh.vertexCount == VERTICES_MAX) {
+                    mesh.SetIndices(indicesMax, MeshTopology.Points, 0);
+                    mesh.SetTriangles(trisMax, 0);
+                } else {
+                    int[] indices = new int[count];
+                    int[] tris = new int[count * 2];
+                    Array.Copy(indicesMax, indices, count);
+                    Array.Copy(trisMax, tris, count * 2);
+                    mesh.SetIndices(indices, MeshTopology.Points, 0);
+                    mesh.SetTriangles(tris, 0);
+                }
+            } else {
+                mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 16f);
+                mesh.vertices = meshInfo.vertices;
+                mesh.colors = meshInfo.colors;
             }
         }
 

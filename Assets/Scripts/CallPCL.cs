@@ -30,6 +30,9 @@ public class CallPCL : MonoBehaviour
             int size = *((int*)ptr) * 3;
             ptr = ptr + 4;
 
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
             int meshId = 0;
             for (int st = 0; st < size; st += vMax / 2, meshId++)
             {
@@ -48,34 +51,34 @@ public class CallPCL : MonoBehaviour
                 }
 
                 Parallel.For(0, len / 3, i => {
-                    int id = (st + i * 3) * POINT_BYTES;
-                    byte* p0 = ptr + id;
-                    byte* p1 = ptr + id + POINT_BYTES;
-                    byte* p2 = ptr + id + POINT_BYTES * 2;
-                    mesh.vertices[i * 6 + 0] = *((Vector3*)p0);
-                    mesh.vertices[i * 6 + 1] = *((Vector3*)p1);
-                    mesh.vertices[i * 6 + 2] = *((Vector3*)p2);
-                    mesh.vertices[i * 6 + 3] = (mesh.vertices[i * 6 + 0] + mesh.vertices[i * 6 + 1]) * 0.5f;
-                    mesh.vertices[i * 6 + 4] = (mesh.vertices[i * 6 + 1] + mesh.vertices[i * 6 + 2]) * 0.5f;
-                    mesh.vertices[i * 6 + 5] = (mesh.vertices[i * 6 + 2] + mesh.vertices[i * 6 + 0]) * 0.5f;
-                    mesh.colors[i * 6 + 0].r = (float)(*(p0 + 12)) / 255;
-                    mesh.colors[i * 6 + 0].g = (float)(*(p0 + 13)) / 255;
-                    mesh.colors[i * 6 + 0].b = (float)(*(p0 + 14)) / 255;
-                    mesh.colors[i * 6 + 1].r = (float)(*(p1 + 12)) / 255;
-                    mesh.colors[i * 6 + 1].g = (float)(*(p1 + 13)) / 255;
-                    mesh.colors[i * 6 + 1].b = (float)(*(p1 + 14)) / 255;
-                    mesh.colors[i * 6 + 2].r = (float)(*(p2 + 12)) / 255;
-                    mesh.colors[i * 6 + 2].g = (float)(*(p2 + 13)) / 255;
-                    mesh.colors[i * 6 + 2].b = (float)(*(p2 + 14)) / 255;
-                    mesh.colors[i * 6 + 3].r = (float)(*(p0 + 16)) / 255;
-                    mesh.colors[i * 6 + 3].g = (float)(*(p0 + 17)) / 255;
-                    mesh.colors[i * 6 + 3].b = (float)(*(p0 + 18)) / 255;
-                    mesh.colors[i * 6 + 4].r = (float)(*(p1 + 16)) / 255;
-                    mesh.colors[i * 6 + 4].g = (float)(*(p1 + 17)) / 255;
-                    mesh.colors[i * 6 + 4].b = (float)(*(p1 + 18)) / 255;
-                    mesh.colors[i * 6 + 5].r = (float)(*(p2 + 16)) / 255;
-                    mesh.colors[i * 6 + 5].g = (float)(*(p2 + 17)) / 255;
-                    mesh.colors[i * 6 + 5].b = (float)(*(p2 + 18)) / 255;
+                    byte* p0 = ptr + (st + i * 3) * POINT_BYTES;
+                    byte* p1 = p0 + POINT_BYTES;
+                    byte* p2 = p1 + POINT_BYTES;
+                    int i6 = i * 6;
+                    mesh.vertices[i6 + 0] = *((Vector3*)p0);
+                    mesh.vertices[i6 + 1] = *((Vector3*)p1);
+                    mesh.vertices[i6 + 2] = *((Vector3*)p2);
+                    mesh.vertices[i6 + 3] = (mesh.vertices[i6 + 0] + mesh.vertices[i6 + 1]) * 0.5f;
+                    mesh.vertices[i6 + 4] = (mesh.vertices[i6 + 1] + mesh.vertices[i6 + 2]) * 0.5f;
+                    mesh.vertices[i6 + 5] = (mesh.vertices[i6 + 2] + mesh.vertices[i6 + 0]) * 0.5f;
+                    mesh.colors[i6 + 0].r = (float)(*(p0 + 12)) / 255;
+                    mesh.colors[i6 + 0].g = (float)(*(p0 + 13)) / 255;
+                    mesh.colors[i6 + 0].b = (float)(*(p0 + 14)) / 255;
+                    mesh.colors[i6 + 1].r = (float)(*(p1 + 12)) / 255;
+                    mesh.colors[i6 + 1].g = (float)(*(p1 + 13)) / 255;
+                    mesh.colors[i6 + 1].b = (float)(*(p1 + 14)) / 255;
+                    mesh.colors[i6 + 2].r = (float)(*(p2 + 12)) / 255;
+                    mesh.colors[i6 + 2].g = (float)(*(p2 + 13)) / 255;
+                    mesh.colors[i6 + 2].b = (float)(*(p2 + 14)) / 255;
+                    mesh.colors[i6 + 3].r = (float)(*(p0 + 16)) / 255;
+                    mesh.colors[i6 + 3].g = (float)(*(p0 + 17)) / 255;
+                    mesh.colors[i6 + 3].b = (float)(*(p0 + 18)) / 255;
+                    mesh.colors[i6 + 4].r = (float)(*(p1 + 16)) / 255;
+                    mesh.colors[i6 + 4].g = (float)(*(p1 + 17)) / 255;
+                    mesh.colors[i6 + 4].b = (float)(*(p1 + 18)) / 255;
+                    mesh.colors[i6 + 5].r = (float)(*(p2 + 16)) / 255;
+                    mesh.colors[i6 + 5].g = (float)(*(p2 + 17)) / 255;
+                    mesh.colors[i6 + 5].b = (float)(*(p2 + 18)) / 255;
                 });
             }
 
@@ -83,6 +86,10 @@ public class CallPCL : MonoBehaviour
             {
                 meshList.Remove(meshList[meshId]);
             }
+
+            stopwatch.Stop();
+            Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
+
         }
     }
 }
