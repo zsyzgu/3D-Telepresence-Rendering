@@ -91,17 +91,8 @@ public class MeshGenerator : MonoBehaviour
                 mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 16f);
                 mesh.vertices = meshInfo.vertices;
                 mesh.colors = meshInfo.colors;
-                if (mesh.vertexCount == VERTICES_MAX) {
-                    mesh.SetIndices(indicesMax, MeshTopology.Points, 0);
-                    mesh.SetTriangles(trisMax, 0);
-                } else {
-                    int[] indices = new int[count];
-                    int[] tris = new int[count * 2];
-                    Array.Copy(indicesMax, indices, count);
-                    Array.Copy(trisMax, tris, count * 2);
-                    mesh.SetIndices(indices, MeshTopology.Points, 0);
-                    mesh.SetTriangles(tris, 0);
-                }
+                mesh.SetIndices(indicesMax, MeshTopology.Points, 0);
+                mesh.SetTriangles(trisMax, 0);
             } else {
                 mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 16f);
                 mesh.vertices = meshInfo.vertices;

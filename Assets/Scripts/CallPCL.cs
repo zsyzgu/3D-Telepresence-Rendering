@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 public class CallPCL : MonoBehaviour
 {
     const int POINT_BYTES = 20;
+    private static int lastMeshId = 0;
     
     [DllImport("3D-Telepresence", EntryPoint = "callStart")]
     public static extern void callStart();
@@ -30,26 +31,20 @@ public class CallPCL : MonoBehaviour
             int size = *((int*)ptr) * 3;
             ptr = ptr + 4;
 
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-
             int meshId = 0;
-            for (int st = 0; st < size; st += vMax / 2, meshId++)
+            for (int st = 0; st < size || meshId < meshList.Count; st += vMax / 2, meshId++)
             {
                 if (meshId >= meshList.Count)
                 {
-                    meshList.Add(new MeshInfos());
+                    MeshInfos newMesh = new MeshInfos();
+                    newMesh.vertexCount = vMax;
+                    newMesh.vertices = new Vector3[vMax];
+                    newMesh.colors = new Color[vMax];
+                    meshList.Add(newMesh);
                 }
                 MeshInfos mesh = meshList[meshId];
 
-                int len = Math.Min(size - st, vMax / 2);
-                if (mesh.vertexCount != len * 2)
-                {
-                    mesh.vertexCount = len * 2;
-                    mesh.vertices = new Vector3[len * 2];
-                    mesh.colors = new Color[len * 2];
-                }
-
+                int len = Math.Max(0, Math.Min(size - st, vMax / 2));
                 Parallel.For(0, len / 3, i => {
                     byte* p0 = ptr + (st + i * 3) * POINT_BYTES;
                     byte* p1 = p0 + POINT_BYTES;
@@ -80,16 +75,11 @@ public class CallPCL : MonoBehaviour
                     mesh.colors[i6 + 5].g = (float)(*(p2 + 17)) / 255;
                     mesh.colors[i6 + 5].b = (float)(*(p2 + 18)) / 255;
                 });
+                Parallel.For(len * 2, vMax, i => {
+                    mesh.vertices[i] = new Vector3();
+                    mesh.colors[i] = new Color();
+                });
             }
-
-            while (meshId < meshList.Count)
-            {
-                meshList.Remove(meshList[meshId]);
-            }
-
-            stopwatch.Stop();
-            Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
-
         }
     }
 }
