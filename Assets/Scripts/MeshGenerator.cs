@@ -60,6 +60,7 @@ public class MeshGenerator : MonoBehaviour
 
     public void Generate()
     {
+
         if (meshArray == null || meshArray.Length != meshList.Count)
         {
             if (meshArray != null)
@@ -77,24 +78,25 @@ public class MeshGenerator : MonoBehaviour
 
         for (int i = 0; i < meshList.Count; i++)
         {
-            MeshInfos meshInfo = meshList[i];
-            int count = meshInfo.vertexCount;
-
             if (meshArray[i] == null)
             {
                 meshArray[i] = new Mesh();
             }
+
+            MeshInfos meshInfo = meshList[i];
             Mesh mesh = meshArray[i];
 
-            if (mesh.vertexCount != meshInfo.vertices.Length) {
+            if (mesh.vertexCount != meshInfo.vertices.Length)
+            {
                 mesh.Clear();
                 mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 16f);
                 mesh.vertices = meshInfo.vertices;
                 mesh.colors = meshInfo.colors;
                 mesh.SetIndices(indicesMax, MeshTopology.Points, 0);
                 mesh.SetTriangles(trisMax, 0);
-            } else {
-                mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 16f);
+            }
+            else
+            {
                 mesh.vertices = meshInfo.vertices;
                 mesh.colors = meshInfo.colors;
             }
@@ -137,3 +139,11 @@ public class MeshGenerator : MonoBehaviour
         return meshGameObject;
     }
 }
+
+/*
+System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+stopwatch.Start();
+
+stopwatch.Stop();
+Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
+*/

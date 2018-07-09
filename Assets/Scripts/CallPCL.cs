@@ -10,7 +10,7 @@ public class CallPCL : MonoBehaviour
 {
     const int POINT_BYTES = 20;
     private static int lastMeshId = 0;
-    
+
     [DllImport("3D-Telepresence", EntryPoint = "callStart")]
     public static extern void callStart();
 
@@ -28,11 +28,18 @@ public class CallPCL : MonoBehaviour
         unsafe
         {
             byte* ptr = (byte*)callUpdate();
+            if (ptr == null)
+            {
+                return;
+            }
             int size = *((int*)ptr) * 3;
             ptr = ptr + 4;
 
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
             int meshId = 0;
-            for (int st = 0; st < size || meshId < meshList.Count; st += vMax / 2, meshId++)
+            for (int st = 0; st < size; st += vMax / 2, meshId++)
             {
                 if (meshId >= meshList.Count)
                 {
@@ -59,27 +66,37 @@ public class CallPCL : MonoBehaviour
                     mesh.colors[i6 + 0].r = (float)(*(p0 + 12)) / 255;
                     mesh.colors[i6 + 0].g = (float)(*(p0 + 13)) / 255;
                     mesh.colors[i6 + 0].b = (float)(*(p0 + 14)) / 255;
-                    mesh.colors[i6 + 1].r = (float)(*(p1 + 12)) / 255;
-                    mesh.colors[i6 + 1].g = (float)(*(p1 + 13)) / 255;
-                    mesh.colors[i6 + 1].b = (float)(*(p1 + 14)) / 255;
-                    mesh.colors[i6 + 2].r = (float)(*(p2 + 12)) / 255;
-                    mesh.colors[i6 + 2].g = (float)(*(p2 + 13)) / 255;
-                    mesh.colors[i6 + 2].b = (float)(*(p2 + 14)) / 255;
                     mesh.colors[i6 + 3].r = (float)(*(p0 + 16)) / 255;
                     mesh.colors[i6 + 3].g = (float)(*(p0 + 17)) / 255;
                     mesh.colors[i6 + 3].b = (float)(*(p0 + 18)) / 255;
+                    mesh.colors[i6 + 1].r = (float)(*(p1 + 12)) / 255;
+                    mesh.colors[i6 + 1].g = (float)(*(p1 + 13)) / 255;
+                    mesh.colors[i6 + 1].b = (float)(*(p1 + 14)) / 255;
                     mesh.colors[i6 + 4].r = (float)(*(p1 + 16)) / 255;
                     mesh.colors[i6 + 4].g = (float)(*(p1 + 17)) / 255;
                     mesh.colors[i6 + 4].b = (float)(*(p1 + 18)) / 255;
+                    mesh.colors[i6 + 2].r = (float)(*(p2 + 12)) / 255;
+                    mesh.colors[i6 + 2].g = (float)(*(p2 + 13)) / 255;
+                    mesh.colors[i6 + 2].b = (float)(*(p2 + 14)) / 255;
                     mesh.colors[i6 + 5].r = (float)(*(p2 + 16)) / 255;
                     mesh.colors[i6 + 5].g = (float)(*(p2 + 17)) / 255;
                     mesh.colors[i6 + 5].b = (float)(*(p2 + 18)) / 255;
                 });
                 Parallel.For(len * 2, vMax, i => {
-                    mesh.vertices[i] = new Vector3();
-                    mesh.colors[i] = new Color();
+                    mesh.vertices[i].Set(0, 0, 0); //mesh.colors[i] = new Color();
                 });
             }
+            for (int id = meshId; id < lastMeshId; id++)
+            {
+                MeshInfos mesh = meshList[id];
+                Parallel.For(0, vMax, i => {
+                    mesh.vertices[i].Set(0, 0, 0); //mesh.colors[i] = new Color();
+                });
+            }
+            lastMeshId = meshId;
+
+            stopwatch.Stop();
+            Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
         }
     }
 }
