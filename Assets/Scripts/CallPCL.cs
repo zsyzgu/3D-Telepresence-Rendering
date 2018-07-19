@@ -20,6 +20,9 @@ public class CallPCL : MonoBehaviour
     [DllImport("3D-Telepresence", EntryPoint = "callRegistration")]
     public static extern void callRegistration();
 
+    [DllImport("3D-Telepresence", EntryPoint = "callSaveExtrinsics")]
+    public static extern void callSaveExtrinsics();
+
     [DllImport("3D-Telepresence", EntryPoint = "callStop")]
     public static extern void callStop();
 
@@ -35,8 +38,8 @@ public class CallPCL : MonoBehaviour
             int size = *((int*)ptr) * 3;
             ptr = ptr + 4;
 
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
+            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            //stopwatch.Start();
 
             int meshId = 0;
             for (int st = 0; st < size; st += vMax / 2, meshId++)
@@ -95,8 +98,8 @@ public class CallPCL : MonoBehaviour
             }
             lastMeshId = meshId;
 
-            stopwatch.Stop();
-            Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
+            //stopwatch.Stop();
+            //Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
         }
     }
 }

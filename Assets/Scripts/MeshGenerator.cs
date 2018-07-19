@@ -51,6 +51,10 @@ public class MeshGenerator : MonoBehaviour
         {
             CallPCL.callRegistration();
         }
+        if (Input.GetKey(KeyCode.S))
+        {
+            CallPCL.callSaveExtrinsics();
+        }
     }
 
     void OnDestroy()
