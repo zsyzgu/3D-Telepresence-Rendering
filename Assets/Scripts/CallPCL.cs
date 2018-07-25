@@ -41,6 +41,9 @@ public class CallPCL : MonoBehaviour
             int size = *((int*)ptr) * 3;
             ptr = ptr + 4;
 
+            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            //stopwatch.Start();
+
             int meshId = 0;
             for (int st = 0; st < size; st += vMax / 2, meshId++)
             {
@@ -97,6 +100,9 @@ public class CallPCL : MonoBehaviour
                 });
             }
             lastMeshId = meshId;
+
+            //stopwatch.Stop();
+            //Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
         }
     }
 }
