@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: a314cfe03dcf11e49a95249370c2466b, type: 3}
+  material: {fileID: 2100000, guid: 1deed34360dbc8a4383191d3deafb398, type: 2}
 --- !u!1 &1537256352
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: a314cfe03dcf11e49a95249370c2466b, type: 3}
+  material: {fileID: 2100000, guid: 1deed34360dbc8a4383191d3deafb398, type: 2}
 --- !u!4 &1537256354
 Transform:
   m_ObjectHideFlags: 0

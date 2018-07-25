@@ -5,3 +5,4 @@
 /.vs
 *.csproj
 *.sln
+*.cfg
