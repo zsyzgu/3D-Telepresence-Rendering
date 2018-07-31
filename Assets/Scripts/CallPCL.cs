@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -19,9 +19,6 @@ public class CallPCL : MonoBehaviour
 
     [DllImport("3D-Telepresence", EntryPoint = "callRegistration")]
     public static extern void callRegistration();
-
-    [DllImport("3D-Telepresence", EntryPoint = "callSaveExtrinsics")]
-    public static extern void callSaveExtrinsics();
 
     [DllImport("3D-Telepresence", EntryPoint = "callSaveBackground")]
     public static extern void callSaveBackground();

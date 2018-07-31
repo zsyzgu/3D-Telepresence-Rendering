@@ -12,6 +12,11 @@ public class ShowFPS : MonoBehaviour
 
     private float f_Fps;
 
+    private void Awake()
+    {
+
+    }
+
     void Start()
     {
         f_LastInterval = Time.realtimeSinceStartup;

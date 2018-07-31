@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
@@ -47,23 +47,20 @@ public class MeshGenerator : MonoBehaviour
     {
         CallPCL.getMesh(ref meshList, VERTICES_MAX);
         Generate();
-        if (Input.GetKey(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             CallPCL.callRegistration();
         }
-        if (Input.GetKey(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             CallPCL.callSaveBackground();
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            CallPCL.callSaveExtrinsics();
         }
     }
 
     void OnDestroy()
     {
         CallPCL.callStop();
+        Debug.Log("Stop");
     }
 
     public void Generate()
