@@ -10,6 +10,7 @@ public class CallPCL : MonoBehaviour
 {
     const int POINT_BYTES = 20;
     private static int lastMeshId = 0;
+    private static unsafe byte* ptr;
 
     [DllImport("3D-Telepresence", EntryPoint = "callStart")]
     public static extern void callStart();
@@ -26,20 +27,24 @@ public class CallPCL : MonoBehaviour
     [DllImport("3D-Telepresence", EntryPoint = "callStop")]
     public static extern void callStop();
 
+    public static void kernelUpdate()
+    {
+        unsafe
+        {
+            ptr = (byte*)callUpdate();
+        }
+    }
+
     public static void getMesh(ref List<MeshInfos> meshList, int vMax)
     {
         unsafe
         {
-            byte* ptr = (byte*)callUpdate();
             if (ptr == null)
             {
                 return;
             }
             int size = *((int*)ptr) * 3;
             ptr = ptr + 4;
-
-            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            //stopwatch.Start();
 
             int meshId = 0;
             for (int st = 0; st < size; st += vMax / 2, meshId++)
@@ -97,9 +102,6 @@ public class CallPCL : MonoBehaviour
                 });
             }
             lastMeshId = meshId;
-
-            //stopwatch.Stop();
-            //Debug.Log(stopwatch.Elapsed.TotalMilliseconds);
         }
     }
 }

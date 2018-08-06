@@ -8,7 +8,7 @@ public class ShowFPS : MonoBehaviour
 
     private float f_LastInterval;
 
-    private int i_Frames = 0;
+    private static int i_Frames = 0;
 
     private float f_Fps;
 
@@ -31,8 +31,6 @@ public class ShowFPS : MonoBehaviour
 
     void Update()
     {
-        ++i_Frames;
-
         if (Time.realtimeSinceStartup > f_LastInterval + f_UpdateInterval)
         {
             f_Fps = i_Frames / (Time.realtimeSinceStartup - f_LastInterval);
@@ -41,5 +39,10 @@ public class ShowFPS : MonoBehaviour
 
             f_LastInterval = Time.realtimeSinceStartup;
         }
+    }
+
+    public static void udpateFrame()
+    {
+        i_Frames++;
     }
 }

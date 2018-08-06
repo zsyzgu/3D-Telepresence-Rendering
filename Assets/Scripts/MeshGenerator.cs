@@ -17,6 +17,8 @@ public class MeshGenerator : MonoBehaviour
     private int[] indicesMax = new int[VERTICES_MAX];
     private int[] trisMax = new int[VERTICES_MAX * 2];
 
+    private Thread thread;
+
     void Start()
     {
         CallPCL.callStart();
@@ -41,12 +43,30 @@ public class MeshGenerator : MonoBehaviour
             trisMax[12 * j + 10] = 6 * j + 5;
             trisMax[12 * j + 11] = 6 * j + 4;
         });
+
+        thread = new Thread(subThread);
+        thread.Start();
+    }
+
+    void subThread()
+    {
+        while (true)
+        {
+            CallPCL.kernelUpdate();
+            lock (this)
+            {
+                CallPCL.getMesh(ref meshList, VERTICES_MAX);
+            }
+            ShowFPS.udpateFrame();
+        }
     }
 
     void Update()
     {
-        CallPCL.getMesh(ref meshList, VERTICES_MAX);
-        Generate();
+        lock (this)
+        {
+            Generate();
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             CallPCL.callRegistration();
@@ -59,6 +79,11 @@ public class MeshGenerator : MonoBehaviour
 
     void OnDestroy()
     {
+        thread.Abort();
+        while (thread.IsAlive)
+        {
+            Thread.Sleep(1);
+        }
         CallPCL.callStop();
         Debug.Log("Stop");
     }
