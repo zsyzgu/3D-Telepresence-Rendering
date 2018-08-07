@@ -11,6 +11,9 @@ public class MeshGenerator : MonoBehaviour
     public Shader shader;
 
     private List<MeshInfos> meshList = new List<MeshInfos>();
+    int turn = 0;
+    private List<MeshInfos> meshList0 = new List<MeshInfos>();
+    private List<MeshInfos> meshList1 = new List<MeshInfos>();
     private const int VERTICES_MAX = 65502;
     private Mesh[] meshArray = null;
 
@@ -53,9 +56,16 @@ public class MeshGenerator : MonoBehaviour
         while (true)
         {
             CallPCL.kernelUpdate();
-            lock (this)
+            if (turn == 0)
             {
-                CallPCL.getMesh(ref meshList, VERTICES_MAX);
+                CallPCL.getMesh(ref meshList0, VERTICES_MAX);
+                meshList = meshList0;
+                turn = 1;
+            } else
+            {
+                CallPCL.getMesh(ref meshList1, VERTICES_MAX);
+                meshList = meshList1;
+                turn = 0;
             }
             ShowFPS.udpateFrame();
         }
@@ -63,10 +73,7 @@ public class MeshGenerator : MonoBehaviour
 
     void Update()
     {
-        lock (this)
-        {
-            Generate();
-        }
+        Generate();
         if (Input.GetKeyDown(KeyCode.R))
         {
             CallPCL.callRegistration();
@@ -90,7 +97,8 @@ public class MeshGenerator : MonoBehaviour
 
     public void Generate()
     {
-        if (meshArray == null || meshArray.Length != meshList.Count)
+        List<MeshInfos> generateList = meshList;
+        if (meshArray == null || meshArray.Length != generateList.Count)
         {
             if (meshArray != null)
             {
@@ -102,17 +110,17 @@ public class MeshGenerator : MonoBehaviour
                     }
                 }
             }
-            meshArray = new Mesh[meshList.Count];
+            meshArray = new Mesh[generateList.Count];
         }
 
-        for (int i = 0; i < meshList.Count; i++)
+        for (int i = 0; i < generateList.Count; i++)
         {
             if (meshArray[i] == null)
             {
                 meshArray[i] = new Mesh();
             }
 
-            MeshInfos meshInfo = meshList[i];
+            MeshInfos meshInfo = generateList[i];
             Mesh mesh = meshArray[i];
 
             if (mesh.vertexCount != meshInfo.vertices.Length)

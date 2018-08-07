@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 public class CallPCL : MonoBehaviour
 {
     const int POINT_BYTES = 20;
-    private static int lastMeshId = 0;
     private static unsafe byte* ptr;
 
     [DllImport("3D-Telepresence", EntryPoint = "callStart")]
@@ -93,15 +92,19 @@ public class CallPCL : MonoBehaviour
                 Parallel.For(len * 2, vMax, i => {
                     mesh.vertices[i].Set(0, 0, 0); //mesh.colors[i] = new Color();
                 });
+                mesh.exist = true;
             }
-            for (int id = meshId; id < lastMeshId; id++)
+            for (int id = meshId; id < meshList.Count; id++)
             {
                 MeshInfos mesh = meshList[id];
-                Parallel.For(0, vMax, i => {
-                    mesh.vertices[i].Set(0, 0, 0); //mesh.colors[i] = new Color();
-                });
+                if (mesh.exist)
+                {
+                    Parallel.For(0, vMax, i => {
+                        mesh.vertices[i].Set(0, 0, 0); //mesh.colors[i] = new Color();
+                    });
+                    mesh.exist = false;
+                }
             }
-            lastMeshId = meshId;
         }
     }
 }

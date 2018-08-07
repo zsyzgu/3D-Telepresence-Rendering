@@ -8,5 +8,5 @@ public class MeshInfos
 	public Vector3[] normals;
 	public Color[] colors;
 	public int vertexCount;
-	public Bounds bounds;
+    public bool exist;
 }
