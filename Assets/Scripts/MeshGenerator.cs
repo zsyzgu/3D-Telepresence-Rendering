@@ -74,10 +74,6 @@ public class MeshGenerator : MonoBehaviour
     void Update()
     {
         Generate();
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            CallPCL.callRegistration();
-        }
         if (Input.GetKeyDown(KeyCode.B))
         {
             CallPCL.callSaveBackground();
