@@ -56,6 +56,7 @@ public class MeshGenerator : MonoBehaviour
         while (true)
         {
             CallPCL.kernelUpdate();
+            Voice.startTiming();
             if (turn == 0)
             {
                 CallPCL.getMesh(ref meshList0, VERTICES_MAX);
